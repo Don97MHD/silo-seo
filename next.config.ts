@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
+
 const nextConfig: NextConfig = {
   typescript: {
-    // !! تحذير: هذا سيتجاهل أخطاء TypeScript للسماح بالبناء
+    // تجاهل أخطاء النوع للسماح بالبناء
     ignoreBuildErrors: true,
   },
+  // إعدادات إضافية للتوافق مع Prisma 7
+  serverExternalPackages: ['@prisma/client', 'pg'],
 };
+
 
 export default nextConfig;
