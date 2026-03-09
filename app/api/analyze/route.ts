@@ -72,11 +72,11 @@ export async function POST(req: Request) {
 
     // الاحتفاظ بالروابط اليدوية
     const existingManualPages = await prisma.page.findMany({ where: { projectId: project.id, isManual: true } });
-existingManualPages.forEach((p: any) => urlToIdMap.set(p.url, p.id));
+    existingManualPages.forEach((p: any) => urlToIdMap.set(p.url, p.id));
 
     // 1. ضمان وجود الصفحة الرئيسية كجذر أول
 let rootId: string = crypto.randomUUID();
-    if (urlToIdMap.has(cleanDomain)) {
+    if (urlToIdMap.has(cleanDomain)) {  
       rootId = urlToIdMap.get(cleanDomain)!;
     } else {
       urlToIdMap.set(cleanDomain, rootId);

@@ -1,19 +1,24 @@
-import { PrismaClient } from '@prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
+// @ts-ignore
+import { PrismaClient } from '@prisma/client'
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = `${process.env.DATABASE_URL}`
 
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    adapter, // هذا هو الـ Adapter الذي يطلبه الإصدار السابع
+const prismaClientSingleton = () => {
+  return new PrismaClient({
+    adapter,
     log: ['query'],
-  });
+  })
+}
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+declare global {
+  var prisma: undefined | ReturnType<typeof prismaClientSingleton>
+}
+
+export const prisma = globalThis.prisma ?? prismaClientSingleton()
+
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma
