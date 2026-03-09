@@ -1,0 +1,37 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  // نبقي هذا الملف كما هو في إعداداتك لـ Prisma 7
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  domain    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pages     Page[]
+}
+
+model Page {
+  id        String  @id @default(cuid())
+  url       String
+  path      String
+  title     String?
+  keywords  String?
+  level     Int     @default(0)
+  projectId String
+  parentId  String?
+  isManual  Boolean @default(false) // <-- تمت الإضافة هنا لتمييز الروابط المضافة يدوياً
+
+  project  Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  parent   Page?   @relation("PageToPage", fields: [parentId], references: [id])
+  children Page[]  @relation("PageToPage")
+
+  @@unique([projectId, url])
+}
