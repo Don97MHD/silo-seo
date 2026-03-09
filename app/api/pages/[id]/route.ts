@@ -1,4 +1,5 @@
 // app/api/pages/route.ts
+export const dynamic = 'force-dynamic'; // أضف هذا السطر
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
