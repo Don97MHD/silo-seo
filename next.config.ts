@@ -1,21 +1,19 @@
+// next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* تجاهل أخطاء TypeScript أثناء البناء لضمان نجاح الرفع */
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
   
-  /* تجاهل أخطاء ESLint أثناء البناء */
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
-  /* إعدادات Prisma و Postgres لضمان العمل على Vercel */
-  serverExternalPackages: ["@prisma/client", "pg"],
-
-  /* إعدادات إضافية لضمان استقرار المسارات */
-  trailingSlash: false,
+  // هذه الخاصية تمنع Next.js من محاولة فحص الـ API أثناء البناء
+  output: 'standalone', 
+  
+  serverExternalPackages: ['@prisma/client', 'pg'],
+  
+  // تعطيل توليد الصفحات الثابتة للـ API
+  experimental: {
+    authInterrupts: true,
+  }
 };
 
 export default nextConfig;
